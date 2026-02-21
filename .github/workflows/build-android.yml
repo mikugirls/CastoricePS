@@ -1,0 +1,89 @@
+name: Build Android
+
+on:
+  workflow_dispatch:
+
+env:
+  ZIG_VERSION: 0.14.1
+
+jobs:
+  build-android-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Zig (Linux)
+        run: |
+          wget -q "https://ziglang.org/download/${{ env.ZIG_VERSION }}/zig-x86_64-linux-${{ env.ZIG_VERSION }}.tar.xz"
+          tar -xf "zig-x86_64-linux-${{ env.ZIG_VERSION }}.tar.xz"
+          
+          ZIG_DIR=$(find $(pwd) -maxdepth 1 -type d -name "zig-*" | head -n1)
+          echo "Found Zig directory: $ZIG_DIR"
+          
+          echo "$ZIG_DIR" >> $GITHUB_PATH
+          $ZIG_DIR/zig version
+
+      - name: ARM64 不需要修复 artifact 名称（它需要 castoriceps 作为库）
+        run: |
+          echo "ARM64 平台保持 'castoriceps' 不变"
+          grep -n "artifact" build.zig | head -3 || true
+
+      - name: Build Android ARM64 (using musl)
+        run: |
+          echo "执行: zig build -Dtarget=aarch64-linux-musl -Doptimize=ReleaseSafe"
+          zig build -Dtarget=aarch64-linux-musl -Doptimize=ReleaseSafe
+
+      - name: Upload Android ARM64 artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-arm64-executable
+          path: zig-out/bin/
+
+  build-android-armv7:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Zig (Linux)
+        run: |
+          wget -q "https://ziglang.org/download/${{ env.ZIG_VERSION }}/zig-x86_64-linux-${{ env.ZIG_VERSION }}.tar.xz"
+          tar -xf "zig-x86_64-linux-${{ env.ZIG_VERSION }}.tar.xz"
+          
+          ZIG_DIR=$(find $(pwd) -maxdepth 1 -type d -name "zig-*" | head -n1)
+          echo "Found Zig directory: $ZIG_DIR"
+          
+          echo "$ZIG_DIR" >> $GITHUB_PATH
+          $ZIG_DIR/zig version
+
+      - name: 修复 ARMv7 平台的 artifact 名称
+        run: |
+          echo "检查可用的 artifact..."
+          # 查看实际可用的 artifact
+          echo "将 'castoriceps' 修复为 'CastoricePS' (ARMv7 需要)"
+          sed -i 's/artifact("castoriceps")/artifact("CastoricePS")/g' build.zig
+          echo "修复完成"
+          grep -n "artifact" build.zig | head -3
+
+      - name: 修复 ARMv7 类型不匹配问题
+        run: |
+          echo "查找所有包含 readToEndAlloc 的文件并添加 @intCast"
+          find . -name "*.zig" -type f -exec grep -l "readToEndAlloc(allocator, [a-zA-Z0-9_]*)" {} \; | while read file; do
+            echo "处理文件: $file"
+            sed -i 's/\(readToEndAlloc(allocator, \)\([a-zA-Z0-9_]\+\))/\1@intCast(\2))/g' "$file"
+          done
+          echo "所有文件处理完成"
+
+      - name: Build Android ARMv7
+        run: |
+          echo "执行: zig build -Dtarget=arm-linux-androideabi -Doptimize=ReleaseSafe"
+          zig build -Dtarget=arm-linux-androideabi -Doptimize=ReleaseSafe
+
+      - name: Upload Android ARMv7 artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-armv7-executable
+          path: zig-out/bin/

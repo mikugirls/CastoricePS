@@ -178,11 +178,6 @@ pub fn main() !void {
         std.log.warn("[Program] ensure freesr-data.json, resources/, protocol/ are present in cwd or parent directories", .{});
     }
 
-    // Pink notices at the very start.
-    std.debug.print("{s}CastoricePS by aero_pro. Completely free to use.It's a free software, If you paid for it, you've been scammed.{s}\n", .{ color.blue, color.reset });
-    std.debug.print("{s}https://github.com/DBKAHHK/SR-CasPS{s}\n", .{ color.blue, color.reset });
-    std.debug.print("{s}https://discord.gg/CastoricePS{s}\n", .{ color.blue, color.reset });
-
     // Device info: HWID and IP addresses.
     const hwid_opt: ?[]u8 = computeHwId(allocator) catch |err| blk: {
         std.log.err("Failed to compute HWID: {s}", .{@errorName(err)});

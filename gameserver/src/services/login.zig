@@ -10,8 +10,6 @@ const Allocator = std.mem.Allocator;
 const ArrayList = std.ArrayList;
 const CmdID = protocol.CmdID;
 
-const embedded_enter_lua: []const u8 = @embedFile("../lua/new.lua");
-
 const content = [_]u32{
     200001, 200002, 200003, 200004, 200005, 200006, 200007, 200008,
     150017, 150015, 150021, 150018, 130011, 130012, 130013, 150025,

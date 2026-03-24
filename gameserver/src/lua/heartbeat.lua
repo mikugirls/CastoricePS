@@ -84,12 +84,12 @@ end
 -- Example: replace texts
 setTextComponent(
     "UIRoot/AboveDialog/BetaHintDialog(Clone)",
-    "<color=#FF7BEA>CastoricePS is a free and open source software.</color>"
+    "<color=#FF7BEA></color>"
 )
 
 setTextComponent(
     "VersionText",
-    "<color=#A675FF>HyacineLover | Based on YaoGuangSR | Discord.gg/CastoricePS</color>"
+    "<color=#A675FF>HyacineLover</color>"
 )
 
 -- UI debugging helpers:

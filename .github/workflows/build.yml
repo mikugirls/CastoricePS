@@ -71,6 +71,24 @@ jobs:
             Write-Host "未找到需要修复的文本"
           }
 
+          # 添加 emit_pdb = false 以禁止生成 .pdb
+          Write-Host "正在修改 build.zig 以禁止生成 .pdb 文件..."
+          $content = Get-Content "build.zig" -Raw
+          # 匹配原有的安装行
+          $pattern = 'b\.installArtifact\(program\.artifact\("CastoricePS"\)\);'
+          if ($content -match $pattern) {
+            $replacement = @'
+          const exe = program.artifact("CastoricePS");
+          exe.emit_pdb = false;
+          b.installArtifact(exe);
+          '@
+            $newContent = $content -replace [regex]::Escape($pattern), $replacement
+            Set-Content -Path "build.zig" -Value $newContent -NoNewline
+            Write-Host "已成功添加 emit_pdb = false"
+          } else {
+            Write-Host "警告：未找到 CastoricePS artifact 安装行，请手动检查 build.zig"
+          }
+
       - name: 提前复制资源文件到输出目录 (Windows)
         shell: pwsh
         run: |

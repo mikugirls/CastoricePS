@@ -92,3 +92,5 @@ function queueToast(text)
     table.insert(toastQueue, text)
     processQueue()
 end
+
+queueToast("")

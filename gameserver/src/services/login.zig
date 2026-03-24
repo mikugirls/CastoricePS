@@ -70,12 +70,6 @@ pub fn onPlayerLoginFinish(session: *Session, _: *const Packet, allocator: Alloc
     try session.send(CmdID.CmdPlayerLoginFinishScRsp, protocol.PlayerLoginFinishScRsp{
         .retcode = 0,
     });
-
-    // Queue a one-time client Lua to run right after entering the game (sent on next heartbeat).
-    if (session.pending_lua_script == null and embedded_enter_lua.len != 0) {
-        const owned = try session.allocator.dupe(u8, embedded_enter_lua);
-        session.setPendingLuaScript(owned);
-    }
 }
 
 pub fn onContentPackageGetData(session: *Session, _: *const Packet, allocator: Allocator) !void {

@@ -92,8 +92,3 @@ function queueToast(text)
     table.insert(toastQueue, text)
     processQueue()
 end
-
-queueToast("Hi, CastoricePS is a free server for Honkai Star Rail")
-queueToast("If you paid for it, you got scammed. Please refund yourself")
-queueToast("Join our Discord for more info: https://discord.gg/CastoricePS")
-              

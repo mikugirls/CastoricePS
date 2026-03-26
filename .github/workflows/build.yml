@@ -150,7 +150,7 @@ jobs:
 
       - name: 修复 session.zig 文件名大小写 (Linux)
         run: |
-          find . -name "*.zig" -type f -exec sed -i 's/"session"/"Session"/g' {} +
+          find . -name "*.zig" -type f -exec sed -i 's/session/Session/g' {} +
 
       - name: 提前复制资源文件到输出目录 (Linux)
         run: |
@@ -234,7 +234,7 @@ jobs:
 
       - name: 修复 session.zig 文件名大小写 (Linux)
         run: |
-          find . -name "*.zig" -type f -exec sed -i 's/"session"/"Session"/g' {} +
+          find . -name "*.zig" -type f -exec sed -i 's/session/Session/g' {} +
 
       - name: 提前复制资源文件到输出目录 (Linux)
         run: |

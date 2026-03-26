@@ -21,11 +21,11 @@ on:
       version:
         description: '版本号 (当创建Release时使用)'
         required: false
-        default: '1.6.1'
+        default: '1.6.2'
       release_notes:
         description: '更新说明 (Release描述)'
         required: false
-        default: '解压运行，使用代理，安卓貌似需要root权限运行，安卓代理地址https://github.com/Xuoos/AnimeGamesProxy/releases/download/4.1/AnimeGamesProxy-release_4.1.apk'
+        default: '4.1.51，解压运行，使用代理，安卓貌似需要root权限运行，安卓代理地址https://github.com/Xuoos/AnimeGamesProxy/releases/download/4.1/AnimeGamesProxy-release_4.1.apk'
 
 env:
   ZIG_VERSION: 0.14.1
@@ -69,13 +69,6 @@ jobs:
             Write-Host "修复完成"
           } else {
             Write-Host "未找到需要修复的文本"
-          }
-
-      - name: 修复 session.zig 文件名大小写 (Windows)
-        shell: pwsh
-        run: |
-          Get-ChildItem -Recurse -Filter *.zig | ForEach-Object {
-              (Get-Content $_.FullName) -replace '"session.zig"', '"Session.zig"' | Set-Content $_.FullName
           }
 
       - name: 提前复制资源文件到输出目录 (Windows)
@@ -147,10 +140,6 @@ jobs:
           else
             echo "未找到需要修复的文本"
           fi
-
-      - name: 修复 session.zig 文件名大小写 (Linux)
-        run: |
-          find . -name "*.zig" -type f -exec sed -i 's/"session.zig"/"Session.zig"/g' {} +
 
       - name: 提前复制资源文件到输出目录 (Linux)
         run: |
@@ -231,10 +220,6 @@ jobs:
           find . -name "*.zig" -type f -exec grep -l "@intCast" {} \; | while read file; do
             echo "已修改文件: $file"
           done
-
-      - name: 修复 session.zig 文件名大小写 (Linux)
-        run: |
-          find . -name "*.zig" -type f -exec sed -i 's/"session.zig"/"Session.zig"/g' {} +
 
       - name: 提前复制资源文件到输出目录 (Linux)
         run: |

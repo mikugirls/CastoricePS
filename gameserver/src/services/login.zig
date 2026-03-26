@@ -11,7 +11,6 @@ const ConfigManager = @import("../manager/config_mgr.zig");
 const Allocator = std.mem.Allocator;
 const ArrayList = std.ArrayList;
 const CmdID = protocol.CmdID;
-const embedded_enter_lua: []const u8 = @embedFile("../lua/new.lua");
 
 const content = [_]u32{
     200001, 200002, 200003, 200004, 200005, 200006, 200007, 200008,
@@ -74,11 +73,6 @@ pub fn onPlayerLoginFinish(session: *Session, _: *const Packet, allocator: Alloc
     try session.send(CmdID.CmdPlayerLoginFinishScRsp, protocol.PlayerLoginFinishScRsp{
         .retcode = 0,
     });
-
-    if (session.pending_lua_script == null and embedded_enter_lua.len != 0) {
-        const owned = try session.allocator.dupe(u8, embedded_enter_lua);
-        session.setPendingLuaScript(owned);
-    }
 }
 
 pub fn onContentPackageGetData(session: *Session, _: *const Packet, allocator: Allocator) !void {

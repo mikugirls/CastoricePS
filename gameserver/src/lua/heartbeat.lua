@@ -12,10 +12,10 @@ end
 
 setTextComponent(
     "UIRoot/AboveDialog/BetaHintDialog(Clone)",
-    "<color=#FF7BEA>CastoricePS is free and open source.</color>"
+    "<color=#FF7BEA></color>"
 )
 
 setTextComponent(
     "VersionText",
-    "<color=#A675FF>HyacineLover | Based On Evanescia-sr</color>"
+    "<color=#A675FF></color>"
 )
